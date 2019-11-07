@@ -1,0 +1,25 @@
+{
+  "name": "validator",
+  "version": "1.0.0",
+  "description": "Express middleware and functions to validate payloads against an OpenAPI spec",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll",
+    "test:coverage": "jest --coverage"
+  },
+  "author": "adam.schnaare@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/preset-env": "^7.6.3",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "@hapi/joi": "^14.0.0",
+    "enjoi": "github:adamschnaare/enjoi",
+    "js-yaml": "^3.13.1",
+    "oas2joi": "^1.0.4"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [
+    {
+      "application": ["read", "write"]
+    }
+  ],
+  "components": {
+    "schemas": {
+      "schema_01": {
+        "type": "object",
+        "properties": {
+          "schema_06": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/schema_02"
+              },
+              {
+                "description": "Some description"
+              }
+            ]
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "schema_07": {
+            "type": "string",
+            "example": "1oyHWgRSI0C+ReATHOkrAg"
+          }
+        }
+      },
+      "schema_02": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "example": 1000
+          },
+          "schema_03": {
+            "$ref": "#/components/schemas/schema_03"
+          }
+        }
+      },
+      "schema_03": {
+        "type": "object",
+        "properties": {
+          "isocode": {
+            "type": "string",
+            "example": "ALPHA",
+            "enum": ["ALPHA"]
+          }
+        }
+      },
+      "schema_04": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["created"]
+          },
+          "informational_message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "schema_05": {
+        "required": ["height", "width"],
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "default": "pixel",
+            "enum": ["pixel"]
+          },
+          "width": {
+            "type": "number",
+            "example": 640
+          },
+          "height": {
+            "type": "number",
+            "example": 480
+          }
+        }
+      }
+    }
+  }
+}
