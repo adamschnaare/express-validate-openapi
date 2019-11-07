@@ -1,7 +1,7 @@
 {
-  "name": "validator",
+  "name": "@adamschnaare/express-validate-openapi",
   "version": "1.0.0",
-  "description": "Express middleware and functions to validate payloads against an OpenAPI spec",
+  "description": "Express middleware to validate payloads against an OpenAPI spec",
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
@@ -21,5 +21,20 @@
     "enjoi": "github:adamschnaare/enjoi",
     "js-yaml": "^3.13.1",
     "oas2joi": "^1.0.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamschnaare/express-validate-openapi.git"
+  },
+  "keywords": [
+    "express",
+    "middleware",
+    "joi",
+    "swagger",
+    "openapi"
+  ],
+  "bugs": {
+    "url": "https://github.com/adamschnaare/express-validate-openapi/issues"
+  },
+  "homepage": "https://github.com/adamschnaare/express-validate-openapi#readme"
 }

@@ -1,6 +1,6 @@
 # Express Validate OpenAPI
 
-[Express](https://expressjs.com/) middleware to utilize an [OpenAPI 3.0 spec](https://swagger.io/docs/specification/about/) to validate JSON payloads
+[Express](https://expressjs.com/) middleware to validate payloads against an [OpenAPI 3.0 spec](https://swagger.io/docs/specification/about/)
 
 Uses [Enjoi](https://github.com/tlivings/enjoi) and [Joi](https://github.com/hapijs/joi) to validate models and generate error messaging.
 
