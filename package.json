@@ -1,6 +1,6 @@
 {
   "name": "express-validate-openapi",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Express middleware to validate payloads against an OpenAPI spec",
   "main": "./dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "test:coverage": "jest --coverage",
     "build": "rimraf dist/ && babel src --out-dir dist --ignore 'src/**/*.spec.js'",
     "preversion": "npm test",
-    "version": "npm run build && git add -A dist",
+    "version": "npm run build && git add .",
     "postversion": "git push && git push --tags"
   },
   "author": "adam.schnaare@gmail.com",
