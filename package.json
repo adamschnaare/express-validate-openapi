@@ -1,6 +1,6 @@
 {
   "name": "express-validate-openapi",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Express middleware to validate payloads against an OpenAPI spec",
   "main": "./dist/index.js",
   "scripts": {
