@@ -3,7 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.validate = void 0;
+Object.defineProperty(exports, "parse", {
+  enumerable: true,
+  get: function () {
+    return _parser.parse;
+  }
+});
+Object.defineProperty(exports, "formatErrorMessages", {
+  enumerable: true,
+  get: function () {
+    return _util.formatErrorMessages;
+  }
+});
+exports.validate = exports.respond = void 0;
 
 var _joi = _interopRequireDefault(require("@hapi/joi"));
 
@@ -31,6 +43,30 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * extra: logger object???
  *  */
+const respond = ({
+  errors,
+  logger
+}) => {
+  const formattedErrors = errors.map(error => {
+    const errorMessageArray = (0, _util.formatErrorMessages)(error);
+    return {
+      error: {
+        messages: errorMessageArray
+      }
+    };
+  });
+
+  if (logger) {
+    logger('VALIDATION_ERROR', {
+      _Data: formattedErrors
+    });
+  }
+
+  return formattedErrors;
+};
+
+exports.respond = respond;
+
 const validate = ({
   specPath,
   selector,
@@ -51,25 +87,15 @@ const validate = ({
   });
 
   if (errors.length) {
-    const formattedErrors = errors.map(error => {
-      const errorMessageArray = (0, _util.formatErrorMessages)(error);
-      return {
-        error: {
-          messages: errorMessageArray
-        }
-      };
+    const formattedErrors = respond({
+      errors,
+      logger
     });
-
-    if (logger) {
-      logger('VALIDATION_ERROR', {
-        _Data: formattedErrors
-      });
-    }
-
     return res.status(400).send(formattedErrors);
   }
 
   next();
-};
+}; // TODO Figure out how to leverage the 'RequestBodies' portion of the OpenAPI spec
+
 
 exports.validate = validate;

@@ -15,12 +15,29 @@
  * extra: logger object???
  *  */
 import Joi from '@hapi/joi'
-import { parse } from './lib/parser'
-import { formatErrorMessages } from './lib/util'
+import { parse as parser } from './lib/parser'
+import { formatErrorMessages as format } from './lib/util'
 import { isArray } from 'util'
 
+export { parse } from './lib/parser'
+export { formatErrorMessages } from './lib/util'
+
+export const respond = ({ errors, logger }) => {
+  const formattedErrors = errors.map(error => {
+    const errorMessageArray = format(error)
+    return { error: { messages: errorMessageArray } }
+  })
+
+  if (logger) {
+    logger('VALIDATION_ERROR', {
+      _Data: formattedErrors,
+    })
+  }
+  return formattedErrors
+}
+
 export const validate = ({ specPath, selector, logger }) => (req, res, next) => {
-  const schemas = parse(specPath)
+  const schemas = parser(specPath)
   const selectors = isArray(selector) ? selector : [selector]
   const errors = []
 
@@ -35,19 +52,11 @@ export const validate = ({ specPath, selector, logger }) => (req, res, next) => 
   })
 
   if (errors.length) {
-    const formattedErrors = errors.map(error => {
-      const errorMessageArray = formatErrorMessages(error)
-      return { error: { messages: errorMessageArray } }
-    })
-
-    if (logger) {
-      logger('VALIDATION_ERROR', {
-        _Data: formattedErrors,
-      })
-    }
+    const formattedErrors = respond({ errors, logger })
 
     return res.status(400).send(formattedErrors)
   }
 
   next()
 }
+// TODO Figure out how to leverage the 'RequestBodies' portion of the OpenAPI spec
