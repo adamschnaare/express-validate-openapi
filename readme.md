@@ -7,7 +7,7 @@ Uses [Enjoi](https://github.com/tlivings/enjoi) and [Joi](https://github.com/hap
 # Installation
 
 ```
-npm i adamschnaare/express-validate-openapi
+npm i express-validate-openapi
 ```
 
 # Usage
