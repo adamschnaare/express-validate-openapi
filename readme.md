@@ -12,18 +12,17 @@ npm i adamschnaare/express-validate-openapi
 
 # Usage
 
-Import the middleware
+# Example
 
+Middleware setup
 ```js
+import express from 'express'
+import path from 'path'
 import { validate } from 'express-validate-openapi'
-import bodyParser from 'body-parser' // or similar
-```
+import bodyParser from 'body-parser'
 
-Implement the middleware on endpoints, giving it necessary options. [See express documentation](https://expressjs.com/en/guide/using-middleware.html)
-
-```js
 const specPath = path.join(__dirname, '../mocks/openapi.json')
-const selector = 'someSelector'
+const selector = 'schema_05'
 const logger = (error, data) => console.log(error, data) // optional
 
 const app = express()
@@ -31,13 +30,17 @@ app.use(bodyParser.json()) // body must be JSON
 
 // use on desired endpoints
 app.post('/', validate({ specPath, selector, logger }), function(req, res) {
-  res.send({
-    someSelector: {
-      prop1: 'something',
-      prop2: 'something else',
-    },
-  })
+  res.send()
 })
+```
+
+Example valid request body for above example
+```js
+schema_05: {
+  unit: 'pixel',
+  width: 640,
+  height: 480,
+},
 ```
 
 The `body` of the post request must be valid JSON.
@@ -50,14 +53,17 @@ If you have multiple properties in your payload object, include those keys in an
 const selector = ['someSelector', 'anotherSelector']
 
 app.post('/', validate({ specPath, selector, logger }), function(req, res) {
-  res.send({
-    someSelector: {
-      prop1: 'something',
-      prop2: 'something else',
-    },
-    anotherSelector: 'some string or data',
-  })
+  res.send()
 })
+
+// request body...
+{
+  someSelector: {
+    prop1: 'something',
+    prop2: 'something else',
+  },
+  anotherSelector: 'some string or data',
+}
 ```
 
 # Options

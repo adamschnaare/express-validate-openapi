@@ -1,19 +1,27 @@
 {
-  "name": "@adamschnaare/express-validate-openapi",
+  "name": "express-validate-openapi",
   "version": "1.0.0",
   "description": "Express middleware to validate payloads against an OpenAPI spec",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "jest --watchAll",
-    "test:coverage": "jest --coverage"
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage",
+    "build": "rimraf dist/ && babel src --out-dir dist --ignore 'src/**/*.spec.js'",
+    "preversion": "npm test",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
   },
   "author": "adam.schnaare@gmail.com",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.6.3",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "jest": "^24.9.0",
+    "rimraf": "^3.0.0",
     "supertest": "^4.0.2"
   },
   "dependencies": {
