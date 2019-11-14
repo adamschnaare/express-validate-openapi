@@ -76,13 +76,19 @@ class OpenApiValidator {
     this.logger = logger;
   }
 
-  validate(key) {
+  validate(key, keyInBody) {
     return (req, res, next) => {
       const schemas = (0, _parser.parse)(this.doc);
-      const selectors = (0, _util2.isArray)(key) ? key : [key];
+      const keys = (0, _util2.isArray)(key) ? key : [key];
       const errors = [];
       if (!req.body) return res.status(400).send('req.body must be valid JSON');
-      selectors.forEach(item => {
+
+      if (keyInBody) {
+        req.body[key] = req.body[keyInBody];
+        delete req.body[keyInBody];
+      }
+
+      keys.forEach(item => {
         if (!req.body[item]) return res.status(400).send(`payload missing: ${item}`);
 
         const {
