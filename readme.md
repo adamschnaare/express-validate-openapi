@@ -96,11 +96,13 @@ Callback function that receives two arguments:
 
 # Methods
 
-## validate(key)
+## validate(key,keyInBody)
 
 Express middleware to validate
 
 **key** - `string` or `[string, string]` Schema key(s) to use to validate the payload against. Payload must include these `key:schema` pairs
+
+**keyInBody (optional)** - `string` Key to use in the request body payload. The payload will be transformed to use the `key` parameter's value instead. **Note:** only supported when `key` is a single string value
 
 # Known Issues
 

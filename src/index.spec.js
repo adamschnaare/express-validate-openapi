@@ -1,9 +1,9 @@
-import express from 'express'
-import request from 'supertest'
-import { readFileSync } from 'fs'
 import path from 'path'
-import { validate, OpenApiValidator } from './index.js'
+import { readFileSync } from 'fs'
+import express from 'express'
 import bodyParser from 'body-parser'
+import request from 'supertest'
+import { OpenApiValidator } from './index.js'
 
 const specPath = path.join(__dirname, '../mocks/openapi.json')
 const doc = JSON.parse(readFileSync(specPath, 'utf-8'))
@@ -33,6 +33,24 @@ describe('index', () => {
     const timestamp = new Date().toJSON()
     beforeEach(() => {
       app.use(bodyParser.json())
+    })
+
+    test('should transform the request body if `keyInBody` is given', async () => {
+      const key = 'schema_04'
+      app.post('/', validator.validate(key, 'someKey'), function(req, res) {
+        res.send(req.body)
+      })
+
+      const adjustedPayload = {
+        someKey: { status: 'created', timestamp },
+      }
+      const resp = await request(app)
+        .post('/')
+        .send(adjustedPayload)
+
+      const body = JSON.parse(resp.text)
+
+      expect(body[key]).toBeDefined()
     })
 
     describe('single selector', () => {
