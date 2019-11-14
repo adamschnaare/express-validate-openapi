@@ -15,7 +15,7 @@
  * extra: logger object???
  *  */
 import Joi from '@hapi/joi'
-import { parse as parser } from './lib/parser'
+import { parse } from './lib/parser'
 import { formatErrorMessages as format } from './lib/util'
 import { isArray } from 'util'
 
@@ -36,27 +36,38 @@ export const respond = ({ errors, logger }) => {
   return formattedErrors
 }
 
-export const validate = ({ specPath, selector, logger }) => (req, res, next) => {
-  const schemas = parser(specPath)
-  const selectors = isArray(selector) ? selector : [selector]
-  const errors = []
-
-  if (!req.body) return res.status(400).send('req.body must be valid JSON')
-
-  selectors.forEach(item => {
-    if (!req.body[item]) return res.status(400).send(`payload missing: ${item}`)
-
-    const { error } = Joi.validate(req.body[item], schemas[item])
-
-    if (error) errors.push(error)
-  })
-
-  if (errors.length) {
-    const formattedErrors = respond({ errors, logger })
-
-    return res.status(400).send(formattedErrors)
+export class OpenApiValidator {
+  constructor({ doc, logger }) {
+    this.doc = doc
+    this.logger = logger
   }
 
-  next()
+  validate(key) {
+    return (req, res, next) => {
+      const schemas = parse(this.doc)
+      const selectors = isArray(key) ? key : [key]
+      const errors = []
+
+      if (!req.body) return res.status(400).send('req.body must be valid JSON')
+
+      selectors.forEach(item => {
+        if (!req.body[item]) return res.status(400).send(`payload missing: ${item}`)
+
+        const { error } = Joi.validate(req.body[item], schemas[item])
+
+        if (error) errors.push(error)
+      })
+
+      if (errors.length) {
+        const formattedErrors = respond({ errors, logger: this.logger })
+
+        return res.status(400).send(formattedErrors)
+      }
+
+      next()
+    }
+  }
 }
 // TODO Figure out how to leverage the 'RequestBodies' portion of the OpenAPI spec
+// TODO: implement `const validator = new OpenApiValidator(openApiDocument);` to simply consume a JSON document
+// like https://www.npmjs.com/package/@mochiya98/express-openapi-validate

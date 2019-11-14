@@ -2,16 +2,6 @@ import { getSchemas, formatErrorMessages } from './util'
 import path from 'path'
 
 describe('util', () => {
-  describe('getSchemas', () => {
-    test('should return a js object from a path of `components.schemas`', () => {
-      const specPath = path.join(__dirname, '../../mocks/getSchemas.json')
-      const schemas = getSchemas(specPath)
-
-      expect(typeof schemas).toBe('object')
-      expect(Object.keys(schemas).length).toBe(3)
-    })
-  })
-
   describe('formatErrorMessages', () => {
     test('should return an array of formatted error messages', () => {
       const error = {

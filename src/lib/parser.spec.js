@@ -10,7 +10,7 @@ describe('parser', () => {
 
   describe('parse', () => {
     test('should return an object of Joi schemas', () => {
-      const schemas = parse(specPath)
+      const schemas = parse(doc)
       const name = 'schema_01'
 
       expect(schemas[name].isJoi).toBe(true)

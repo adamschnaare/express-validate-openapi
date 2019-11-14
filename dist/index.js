@@ -1,31 +1,33 @@
-"use strict";
+'use strict'
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "parse", {
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+})
+Object.defineProperty(exports, 'parse', {
   enumerable: true,
-  get: function () {
-    return _parser.parse;
-  }
-});
-Object.defineProperty(exports, "formatErrorMessages", {
+  get: function() {
+    return _parser.parse
+  },
+})
+Object.defineProperty(exports, 'formatErrorMessages', {
   enumerable: true,
-  get: function () {
-    return _util.formatErrorMessages;
-  }
-});
-exports.validate = exports.respond = void 0;
+  get: function() {
+    return _util.formatErrorMessages
+  },
+})
+exports.validate = exports.respond = void 0
 
-var _joi = _interopRequireDefault(require("@hapi/joi"));
+var _joi = _interopRequireDefault(require('@hapi/joi'))
 
-var _parser = require("./lib/parser");
+var _parser = require('./lib/parser')
 
-var _util = require("./lib/util");
+var _util = require('./lib/util')
 
-var _util2 = require("util");
+var _util2 = require('util')
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj }
+}
 
 /** Needs
  * yaml file to use for validation
@@ -43,59 +45,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * extra: logger object???
  *  */
-const respond = ({
-  errors,
-  logger
-}) => {
+const respond = ({ errors, logger }) => {
   const formattedErrors = errors.map(error => {
-    const errorMessageArray = (0, _util.formatErrorMessages)(error);
+    const errorMessageArray = (0, _util.formatErrorMessages)(error)
     return {
       error: {
-        messages: errorMessageArray
-      }
-    };
-  });
+        messages: errorMessageArray,
+      },
+    }
+  })
 
   if (logger) {
     logger('VALIDATION_ERROR', {
-      _Data: formattedErrors
-    });
+      _Data: formattedErrors,
+    })
   }
 
-  return formattedErrors;
-};
+  return formattedErrors
+}
 
-exports.respond = respond;
+exports.respond = respond
 
-const validate = ({
-  specPath,
-  selector,
-  logger
-}) => (req, res, next) => {
-  const schemas = (0, _parser.parse)(specPath);
-  const selectors = (0, _util2.isArray)(selector) ? selector : [selector];
-  const errors = [];
-  if (!req.body) return res.status(400).send('req.body must be valid JSON');
+const validate = ({ specPath, selector, logger }) => (req, res, next) => {
+  const schemas = (0, _parser.parse)(specPath)
+  const selectors = (0, _util2.isArray)(selector) ? selector : [selector]
+  const errors = []
+  if (!req.body) return res.status(400).send('req.body must be valid JSON')
   selectors.forEach(item => {
-    if (!req.body[item]) return res.status(400).send(`payload missing: ${item}`);
+    if (!req.body[item]) return res.status(400).send(`payload missing: ${item}`)
 
-    const {
-      error
-    } = _joi.default.validate(req.body[item], schemas[item]);
+    const { error } = _joi.default.validate(req.body[item], schemas[item])
 
-    if (error) errors.push(error);
-  });
+    if (error) errors.push(error)
+  })
 
   if (errors.length) {
     const formattedErrors = respond({
       errors,
-      logger
-    });
-    return res.status(400).send(formattedErrors);
+      logger,
+    })
+    return res.status(400).send(formattedErrors)
   }
 
-  next();
-}; // TODO Figure out how to leverage the 'RequestBodies' portion of the OpenAPI spec
+  next()
+}
 
-
-exports.validate = validate;
+exports.validate = validate

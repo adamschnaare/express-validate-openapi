@@ -1,20 +1,26 @@
 import express from 'express'
 import request from 'supertest'
+import { readFileSync } from 'fs'
 import path from 'path'
-import { validate } from './index.js'
+import { validate, OpenApiValidator } from './index.js'
 import bodyParser from 'body-parser'
 
 const specPath = path.join(__dirname, '../mocks/openapi.json')
+const doc = JSON.parse(readFileSync(specPath, 'utf-8'))
 
 let app
+let validator
+let logger
 
 describe('index', () => {
   beforeEach(() => {
     app = express()
+    logger = jest.fn()
+    validator = new OpenApiValidator({ doc, logger })
   })
 
   test('should return 400 with a non-JSON body request', async () => {
-    app.post('/', validate({ specPath, selector: 'string' }), function(req, res) {
+    app.post('/', validator.validate('string'), function(req, res) {
       res.send()
     })
     const resp = await request(app).post('/')
@@ -31,8 +37,8 @@ describe('index', () => {
 
     describe('single selector', () => {
       beforeEach(() => {
-        const selector = 'schema_04'
-        app.post('/', validate({ specPath, selector }), function(req, res) {
+        const key = 'schema_04'
+        app.post('/', validator.validate(key), function(req, res) {
           res.send()
         })
       })
@@ -62,8 +68,8 @@ describe('index', () => {
 
     describe('multiple selectors', () => {
       beforeEach(() => {
-        const selector = ['schema_04', 'schema_05']
-        app.post('/', validate({ specPath, selector }), function(req, res) {
+        const keys = ['schema_04', 'schema_05']
+        app.post('/', validator.validate(keys), function(req, res) {
           res.send()
         })
       })
@@ -104,9 +110,8 @@ describe('index', () => {
 
     describe('logger', () => {
       test('should call logger function if provided and has error', async () => {
-        const selector = 'schema_04'
-        const logger = jest.fn()
-        app.post('/', validate({ specPath, selector, logger }), function(req, res) {
+        const key = 'schema_04'
+        app.post('/', validator.validate(key), function(req, res) {
           res.send()
         })
         const resp = await request(app)

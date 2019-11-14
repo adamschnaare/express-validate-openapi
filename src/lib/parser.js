@@ -58,13 +58,13 @@ export const convert = parsedSchemas => {
   return joiSchemas
 }
 
-export const parse = filePath => {
-  const docSchemas = getSchemas(filePath)
+export const parse = doc => {
+  const schemas = doc.components.schemas // throw an error if not here?
   const parsedSchemas = {}
 
-  Object.keys(docSchemas).forEach(name => {
+  Object.keys(schemas).forEach(name => {
     parsedSchemas[name] = parseSchema({
-      schema: docSchemas[name],
+      schema: schemas[name],
     })
   })
 

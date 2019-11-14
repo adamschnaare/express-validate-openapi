@@ -10,78 +10,82 @@ Uses [Enjoi](https://github.com/tlivings/enjoi) and [Joi](https://github.com/hap
 npm i express-validate-openapi
 ```
 
-# Usage
-
 # Example
 
 Middleware setup
+
 ```js
 import express from 'express'
 import path from 'path'
-import { validate } from 'express-validate-openapi'
+import { readFileSync } from 'fs'
 import bodyParser from 'body-parser'
+import { OpenApiValidator } from 'express-validate-openapi'
 
+// Get Parsed JSON doc
 const specPath = path.join(__dirname, '../mocks/openapi.json')
-const selector = 'schema_05'
-const logger = (error, data) => console.log(error, data) // optional
+const doc = JSON.parse(readFileSync(specPath, 'utf-8'))
+// optional
+const logger = (error, data) => console.log(error, data)
+// create instance
+const validator = new OpenApiValidator({ doc, logger })
 
 const app = express()
 app.use(bodyParser.json()) // body must be JSON
-
-// use on desired endpoints
-app.post('/', validate({ specPath, selector, logger }), function(req, res) {
-  res.send()
-})
 ```
 
-Example valid request body for above example
+## Single Schema
+
+To validate a single schema in the request body:
+
 ```js
-schema_05: {
-  unit: 'pixel',
-  width: 640,
-  height: 480,
-},
+app.post('/', validator.validate('schema_05'), function(req, res) {
+  res.send()
+})
+
+// valid request body...
+{
+  "schema_05": {
+    "unit": "pixel",
+    "width": 640,
+    "height": 480,
+  }
+}
 ```
 
 The `body` of the post request must be valid JSON.
 
-## Multiple selectors
+## Multiple schemas
 
-If you have multiple properties in your payload object, include those keys in an array in your `selector`
+If you have multiple properties in your payload object, include those keys in an array in your `keys`
 
 ```js
-const selector = ['someSelector', 'anotherSelector']
+const keys = ['someSchemaKey', 'anotherKey']
 
-app.post('/', validate({ specPath, selector, logger }), function(req, res) {
+app.post('/', validator.validate(keys), function(req, res) {
   res.send()
 })
 
-// request body...
+// valid request body...
 {
-  someSelector: {
-    prop1: 'something',
-    prop2: 'something else',
+  "someSchemaKey": {
+    "prop1": "something",
+    "prop2": "something else",
   },
-  anotherSelector: 'some string or data',
+  "anotherKey": "some string or data"
 }
 ```
 
 # Options
 
-## specPath - `string`
+## doc - `object`
 
-Absolute path to a OpenAPI formatted json file
-
-Example:
+Parsed JSON object
 
 ```js
-// using path module
-path.join(__dirname, '../mocks/openapi.json')
+// example using path and fs modules to retrieve doc
+const specPath = path.join(__dirname, '../mocks/openapi.json')
+const doc = JSON.parse(readFileSync(specPath, 'utf-8'))
 ```
-
-## selector - `string` or `[string, string]`
-
-Schema key(s) to use to validate the payload against. Payload must include these `key:schema` pairs
 
 ## logger - `function(error,data)`
 
@@ -89,6 +93,14 @@ Callback function that receives two arguments:
 
 1. Error message string (`VALIDATION_ERROR`)
 2. Object with `{_Data: errorMessages}` for logging purposes
+
+# Methods
+
+## validate(key)
+
+Express middleware to validate
+
+**key** - `string` or `[string, string]` Schema key(s) to use to validate the payload against. Payload must include these `key:schema` pairs
 
 # Known Issues
 
