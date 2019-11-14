@@ -91,6 +91,24 @@
             "example": 480
           }
         }
+      },
+      "schema_08": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/schema_05"
+        }
+      },
+      "schema_09": {
+        "type": "object",
+        "properties": {
+          "schema_06": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/schema_02"
+              }
+            ]
+          }
+        }
       }
     }
   }

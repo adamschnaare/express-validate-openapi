@@ -123,6 +123,25 @@ describe('index', () => {
         expect(resp.statusCode).toBe(400)
         expect(logger).toHaveBeenCalled()
       })
+      test('should return formatted errors if no logger is given', async () => {
+        const adjustedValidator = new OpenApiValidator({ doc })
+        const key = 'schema_04'
+        app.post('/', adjustedValidator.validate(key), function(req, res) {
+          res.send()
+        })
+
+        const resp = await request(app)
+          .post('/')
+          .send({
+            schema_04: { status: 'created', timestamp: 'somestring' },
+          })
+        const messages = JSON.parse(resp.text)[0].error.messages
+
+        expect(resp.statusCode).toBe(400)
+        expect(messages.length).toBe(1)
+        expect(messages[0].includes('timestamp')).toBe(true)
+        // expect(resp).toHaveBeenCalled()
+      })
     })
   })
 })

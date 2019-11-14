@@ -33,6 +33,7 @@ export const respond = ({ errors, logger }) => {
       _Data: formattedErrors,
     })
   }
+  console.log('formattedErrors', formattedErrors)
   return formattedErrors
 }
 
