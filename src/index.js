@@ -33,7 +33,7 @@ export const respond = ({ errors, logger }) => {
       _Data: formattedErrors,
     })
   }
-  console.log('formattedErrors', formattedErrors)
+
   return formattedErrors
 }
 
@@ -70,5 +70,3 @@ export class OpenApiValidator {
   }
 }
 // TODO Figure out how to leverage the 'RequestBodies' portion of the OpenAPI spec
-// TODO: implement `const validator = new OpenApiValidator(openApiDocument);` to simply consume a JSON document
-// like https://www.npmjs.com/package/@mochiya98/express-openapi-validate

@@ -7,10 +7,6 @@ exports.parse = exports.convert = exports.parseSchema = void 0;
 
 var _enjoi = _interopRequireDefault(require("enjoi"));
 
-var _util = require("util");
-
-var _util2 = require("./util");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const parseSchema = ({
@@ -18,7 +14,7 @@ const parseSchema = ({
 }) => {
   const baseSchema = {
     type: 'object'
-  }; // if (schema.discriminator) delete schema.discriminator
+  };
 
   if (schema.$ref) {
     schema.$ref = schema.$ref.replace('#/components/schemas/', '');
@@ -85,12 +81,13 @@ const convert = parsedSchemas => {
 
 exports.convert = convert;
 
-const parse = filePath => {
-  const docSchemas = (0, _util2.getSchemas)(filePath);
+const parse = doc => {
+  const schemas = doc.components.schemas; // throw an error if not here?
+
   const parsedSchemas = {};
-  Object.keys(docSchemas).forEach(name => {
+  Object.keys(schemas).forEach(name => {
     parsedSchemas[name] = parseSchema({
-      schema: docSchemas[name]
+      schema: schemas[name]
     });
   });
   return convert(parsedSchemas);
