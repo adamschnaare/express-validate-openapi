@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^14.0.0",
-    "enjoi": "github:adamschnaare/enjoi",
+    "enjoi": "^6.0.0",
     "js-yaml": "^3.13.1",
     "oas2joi": "^1.0.4"
   },

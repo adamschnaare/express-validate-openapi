@@ -47,7 +47,7 @@ describe('parser', () => {
       const parsed = parseSchema({ schema })
 
       expect(parsed.$ref.includes(prefix)).toBe(false)
-      expect(parsed.$ref).toBe('test')
+      expect(parsed.$ref).toBe('test#')
     })
     test('should remove all description and readOnly objects from `allOf` arrays', () => {
       const schema = {

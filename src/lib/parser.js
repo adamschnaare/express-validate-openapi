@@ -6,7 +6,8 @@ export const parseSchema = ({ schema }) => {
   }
 
   if (schema.$ref) {
-    schema.$ref = schema.$ref.replace('#/components/schemas/', '')
+    const key = schema.$ref.replace('#/components/schemas/', '')
+    schema.$ref = `${key}#`
     return schema
   }
 
